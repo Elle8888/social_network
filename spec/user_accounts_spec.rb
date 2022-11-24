@@ -96,6 +96,10 @@ RSpec.describe UserAccountsRepository do
       user_accounts = repo.all
       expect(user_accounts.length).to eq 1
 
+      expect(user_accounts[0].id).to eq '2'
+      expect(user_accounts[0].email_add).to eq 'def@gmail.com'
+      expect(user_accounts[0].username).to eq 'def'
+
     end
 end
 
