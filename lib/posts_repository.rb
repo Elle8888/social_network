@@ -25,11 +25,11 @@ class PostsRepository
   end
 
   def find(id)
-      sql = 'SELECT id, title, content, views, user_accounts_id FROM posts WHERE id = $1;'
-      sql_params = [id]
-      result_set = DatabaseConnection.exec_params(sql, sql_params)
+    sql = 'SELECT id, title, content, views, user_accounts_id FROM posts WHERE id = $1;'
+    sql_params = [id]
+    result_set = DatabaseConnection.exec_params(sql, sql_params)
 
-      post = Post.new
+    post = Post.new
 
       post.id = result_set[0]['id']
       post.title = result_set[0]['title']
@@ -37,23 +37,32 @@ class PostsRepository
       post.views = result_set[0]['views']
       post.user_accounts_id = result_set[0]['user_accounts_id']
 
-      return post
+    return post
   end
 
   def create(post)
-      sql = 'INSERT INTO posts (title, content, views, user_accounts_id)
+    sql = 'INSERT INTO posts (title, content, views, user_accounts_id)
       VALUES ($1, $2, $3, $4);'
-      sql_params = [post.title, post.content, post.views, post.user_accounts_id]
-      result_set = DatabaseConnection.exec_params(sql, sql_params)
+    sql_params = [post.title, post.content, post.views, post.user_accounts_id]
+    result_set = DatabaseConnection.exec_params(sql, sql_params)
 
-      return nil
+    return nil
   end
 
   def delete(id)
-      sql = 'DELETE FROM posts WHERE id = $1'
-      sql_params = [id]
-      result_set = DatabaseConnection.exec_params(sql, sql_params)
+    sql = 'DELETE FROM posts WHERE id = $1'
+    sql_params = [id]
+    result_set = DatabaseConnection.exec_params(sql, sql_params)
 
-      return nil
+    return nil
+  end
+
+  def update(id)
+    sql = 'UPDATE posts SET title = $1, content = $2, views = $3, user_accounts_id = $4
+      WHERE id = $5'
+    sql_params = ['newtitle2', 'newcontent2', '2', '1', id]
+    result_set = DatabaseConnection.exec_params(sql, sql_params)
+
+    return nil
   end
 end
