@@ -7,14 +7,10 @@ RSpec.describe UserAccountsRepository do
         connection = PG.connect({ host: '127.0.0.1', dbname: 'social_network_test' })
         connection.exec(seed_sql)
       end
-      
 
-        before(:each) do 
+        before(:each) do
           reset_user_accounts_table
         end
-      
-        # (your tests will go here).
-
 
     it 'gets all user accounts' do
 
@@ -24,7 +20,7 @@ RSpec.describe UserAccountsRepository do
 
         expect(user_accounts.length).to eq  2
 
-        expect(user_accounts[0]['id']).to eq '1' # =>  1
+        expect(user_accounts[0]['id']).to eq '1'
         expect(user_accounts[0]['email_add']).to eq 'abc@gmail.com'
         expect(user_accounts[0]['username']).to eq 'abc'
 
@@ -58,9 +54,10 @@ RSpec.describe UserAccountsRepository do
         repo = UserAccountsRepository.new
 
         newAccount = UserAccount.new
+
+        newAccount.id = '3'
         newAccount.email_add = 'ghi@gmail.com'
         newAccount.username = 'ghi'
-        newAccount.id = '3'
 
         repo.create(newAccount)
 
@@ -72,22 +69,34 @@ RSpec.describe UserAccountsRepository do
         expect(user_accounts[2]['email_add']).to eq 'ghi@gmail.com'
         expect(user_accounts[2]['username']).to eq 'ghi'
 
-        # expect(newAccounts).to include(
+        # expect(newAccount).to include(
         #  have_attributes(
         #    id: newAccount.id,
         #    email_add: newAccount.email_add,
-        #    username: newAccount.username,
-        #    )
-        #  )
+        #    username: newAccount.username
+        #   )
+        # )
     end
 
-    it 'deletes all acounts' do
+    it 'deletes all accounts' do
 
-    repo = UserAccountsRepository.new
-    repo.delete(1)
-    repo.delete(2)
-    user_accounts = repo.all
-    expect(user_accounts.length).to eq 0
+      repo = UserAccountsRepository.new
+      repo.delete(1)
+      repo.delete(2)
+      user_accounts = repo.all
+      expect(user_accounts.length).to eq 0
+
+    end
+
+    it 'deletes one account' do
+
+      repo = UserAccountsRepository.new
+      user_accounts = repo.all
+      expect(user_accounts.length).to eq 2
+
+      repo.delete(1)
+      user_accounts = repo.all
+      expect(user_accounts.length).to eq 1
 
     end
 end
