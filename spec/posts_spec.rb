@@ -98,10 +98,16 @@ RSpec.describe PostsRepository do
     post = repo.all
 
     expect(post.length).to eq 2
-    
+
     repo.delete(1)
     post = repo.all
     expect(post.length).to eq 1
+    
+    expect(post[0].id).to eq '2'
+    expect(post[0].title).to eq 'title2'
+    expect(post[0].content).to eq 'content2'
+    expect(post[0].views).to eq '2'
+    expect(post[0].user_accounts_id).to eq '1'
 
   end
 end
