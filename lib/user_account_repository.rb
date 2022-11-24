@@ -15,7 +15,7 @@ class UserAccountsRepository
       newAccount.email_add = account['email_add']
       newAccount.username = account['username']
 
-      accounts << account
+      accounts << newAccount
 
     end
 
@@ -28,7 +28,13 @@ class UserAccountsRepository
     sql_params = [id]
     result_set = DatabaseConnection.exec_params(sql, sql_params)
 
-    return result_set
+    newAccount = UserAccount.new
+
+    newAccount.id = result_set[0]['id']
+    newAccount.email_add = result_set[0]['email_add']
+    newAccount.username = result_set[0]['username']
+
+    return newAccount
 
   end
 

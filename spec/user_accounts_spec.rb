@@ -20,13 +20,13 @@ RSpec.describe UserAccountsRepository do
 
         expect(user_accounts.length).to eq  2
 
-        expect(user_accounts[0]['id']).to eq '1'
-        expect(user_accounts[0]['email_add']).to eq 'abc@gmail.com'
-        expect(user_accounts[0]['username']).to eq 'abc'
+        expect(user_accounts[0].id).to eq '1'
+        expect(user_accounts[0].email_add).to eq 'abc@gmail.com'
+        expect(user_accounts[0].username).to eq 'abc'
 
-        expect(user_accounts[1]['id']).to eq '2'
-        expect(user_accounts[1]['email_add']).to eq 'def@gmail.com'
-        expect(user_accounts[1]['username']).to eq 'def'
+        expect(user_accounts[1].id).to eq '2'
+        expect(user_accounts[1].email_add).to eq 'def@gmail.com'
+        expect(user_accounts[1].username).to eq 'def'
 
     end
 
@@ -36,17 +36,15 @@ RSpec.describe UserAccountsRepository do
 
         user_accounts = repo.find(1)
 
-        # expect(user_accounts.length).to eq 2
-
-        expect(user_accounts[0]['id']).to eq '1'
-        expect(user_accounts[0]['email_add']).to eq 'abc@gmail.com'
-        expect(user_accounts[0]['username']).to eq 'abc'
+        expect(user_accounts.id).to eq '1'
+        expect(user_accounts.email_add).to eq 'abc@gmail.com'
+        expect(user_accounts.username).to eq 'abc'
 
         user_accounts = repo.find(2)
 
-        expect(user_accounts[0]['id']).to eq '2'
-        expect(user_accounts[0]['email_add']).to eq 'def@gmail.com'
-        expect(user_accounts[0]['username']).to eq 'def'
+        expect(user_accounts.id).to eq '2'
+        expect(user_accounts.email_add).to eq 'def@gmail.com'
+        expect(user_accounts.username).to eq 'def'
 
     end
 
@@ -65,9 +63,9 @@ RSpec.describe UserAccountsRepository do
 
         expect(user_accounts.length).to eq 3
 
-        expect(user_accounts[2]['id']).to eq '3'
-        expect(user_accounts[2]['email_add']).to eq 'ghi@gmail.com'
-        expect(user_accounts[2]['username']).to eq 'ghi'
+        expect(user_accounts[2].id).to eq '3'
+        expect(user_accounts[2].email_add).to eq 'ghi@gmail.com'
+        expect(user_accounts[2].username).to eq 'ghi'
 
         # expect(newAccount).to include(
         #  have_attributes(
