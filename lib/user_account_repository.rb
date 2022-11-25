@@ -54,4 +54,13 @@ class UserAccountsRepository
 
     return nil
   end
+
+  def update(id)
+    sql = 'UPDATE user_accounts SET email_add = $1, username = $2
+      WHERE id = $3;'
+    sql_params = ['newabc@gmail.com', 'newabc', id]
+    result_set = DatabaseConnection.exec_params(sql, sql_params)
+
+    return nil
+  end
 end

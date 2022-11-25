@@ -101,7 +101,22 @@ RSpec.describe UserAccountsRepository do
       expect(user_accounts[0].username).to eq 'def'
 
     end
+
+    it 'updates' do
+      repo = UserAccountsRepository.new
+
+      user_accounts = repo.find(1)
+
+      expect(user_accounts.id).to eq '1'
+      expect(user_accounts.email_add).to eq 'abc@gmail.com'
+      expect(user_accounts.username).to eq 'abc'
+
+      repo.update(1)
+      user_accounts = repo.find(1)
+
+      expect(user_accounts.id).to eq '1'
+      expect(user_accounts.email_add).to eq 'newabc@gmail.com'
+      expect(user_accounts.username).to eq 'newabc'
+
+    end
 end
-
-# Get all user_accounts
-
