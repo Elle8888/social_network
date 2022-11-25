@@ -104,7 +104,7 @@ You'll then be able to say that:
 -- EXAMPLE
 -- file: albums_table.sql
 
--- Replace the table name, columm names and types.
+-- Replace the table name, column names and types.
 
 -- Create the table without the foreign key first.
 CREATE TABLE user_accounts (
@@ -144,14 +144,14 @@ If seed data is provided (or you already created it), you can skip this step.
 -- EXAMPLE
 -- (file: spec/seeds_{table_name}.sql)
 
--- Write your SQL seed here. 
+-- Write your SQL seed here.
 
 -- First, you'd need to truncate the table - this is so our table is emptied between each test run,
 -- so we can start with a fresh state.
 -- (RESTART IDENTITY resets the primary key)
 
-TRUNCATE TABLE user_accounts RESTART IDENTITY; -- replace with your own table name.
-TRUNCATE TABLE posts RESTART IDENTITY; -- replace with your own table name.
+For posts
+TRUNCATE TABLE user_accounts, posts RESTART IDENTITY; -- replace with your own table name.
 
 -- Below this line there should only be `INSERT` statements.
 -- Replace these statements with your own seed data.
@@ -159,13 +159,23 @@ TRUNCATE TABLE posts RESTART IDENTITY; -- replace with your own table name.
 INSERT INTO user_accounts (email_add, username) VALUES ('abc@gmail.com', 'abc');
 INSERT INTO user_accounts (email_add, username) VALUES ('def@gmail.com', 'def');
 INSERT INTO posts (title, content, views, user_accounts_id) VALUES ('title1', 'content1', 1, 1);
-INSERT INTO posts (title, content, views, user_accounts_id) VALUES ('title2', 'content2', 2, 2);
+INSERT INTO posts (title, content, views, user_accounts_id) VALUES ('title2', 'content2', 2, 1);
+
+For user_accounts
+TRUNCATE TABLE user_accounts, posts RESTART IDENTITY; -- replace with your own table name.
+
+-- Below this line there should only be `INSERT` statements.
+-- Replace these statements with your own seed data.
+
+INSERT INTO user_accounts (email_add, username) VALUES ('abc@gmail.com', 'abc');
+INSERT INTO user_accounts (email_add, username) VALUES ('def@gmail.com', 'def');
 ```
 
 Run this SQL file on the database to truncate (empty) the table, and insert the seed data. Be mindful of the fact any existing records in the table will be deleted.
 
 ```bash
 psql -h 127.0.0.1 social_network_test < seeds_user_accounts.sql
+psql -h 127.0.0.1 social_network_test < seeds_posts.sql
 ```
 
 ## 3. Define the class names
@@ -177,26 +187,26 @@ Usually, the Model class name will be the capitalised table name (single instead
 # Table name: students
 
 # Model class
-# (in lib/student.rb)
+# (in lib/user_account.rb)
 class UserAccount
 end
 
 # Repository class
-# (in lib/student_repository.rb)
-class UserAccountRepository
+# (in lib/user_account_repository.rb)
+class UserAccountsRepository
 end
 
 # EXAMPLE
 # Table name: students
 
 # Model class
-# (in lib/student.rb)
+# (in lib/post.rb)
 class Post
 end
 
 # Repository class
-# (in lib/student_repository.rb)
-class PostRepository
+# (in lib/posts_repository.rb)
+class PostsRepository
 end
 ```
 
@@ -279,7 +289,7 @@ class UserAccountRepository
   def create(user_account)
     # INSERT INTO UserAccount
     # (email_add, username)
-    # VALUES (user_account.email_add, user_account.username)
+    # VALUES (user_account.email_add, user_account.username);
     # returns nil
   end
 
@@ -287,8 +297,13 @@ class UserAccountRepository
 #   # end
 
   def delete(id)
-    # DELETE FROM user_account WHERE id = $1'
-    # returns nil
+    # DELETE FROM user_account WHERE id = $1';
+    # return nil
+  end
+
+  def update(id)
+    # UPDATE user_accounts SET email_add = $1, username = $2 WHERE id = $3;
+    # return nil
   end
 end
 
@@ -315,16 +330,19 @@ class PostsRepository
   def create(post)
     # INSERT INTO post
     # (title, content, views, user_accounts_id)
-    # VALUES (post.title, post.content, post.views, post.user_accounts_id
+    # VALUES (post.title, post.content, post.views, post.user_accounts_id;
     # returns nil
   end
 
-#   # def update(student)
-#   # end
-
   def delete(id)
-    # DELETE FROM post WHERE id = $1'
+    # DELETE FROM post WHERE id = $1';
     # returns nil
+  end
+
+  def update(id)
+    # UPDATE posts SET title = $1, content = $2, views = $3, user_accounts_id = $4
+      # WHERE id = $;
+    # return nil
   end
 end
 ```
@@ -337,7 +355,7 @@ These examples will later be encoded as RSpec tests.
 
 ```ruby
 # EXAMPLES
-#UserAccountRepository 
+#UserAccountRepository
 # 1
 # Get all user_accounts
 
@@ -478,7 +496,7 @@ repo.delete(2)
 post = repo.all
 post.length # => 0
 
-# 4
+# 5
 # deletes one object
 
 repo = PostRepository.new
@@ -509,8 +527,22 @@ def reset_user_accounts_table
 end
 
 describe UserAccountsRepository do
-  before(:each) do 
+  before(:each) do
     reset_user_accounts_table
+  end
+
+  # (your tests will go here).
+end
+
+def reset_posts_table
+  seed_sql = File.read('spec/seeds_posts.sql')
+  connection = PG.connect({ host: '127.0.0.1', dbname: 'social_network' })
+  connection.exec(seed_sql)
+end
+
+describe UserAccountsRepository do
+  before(:each) do
+    reset_posts_table
   end
 
   # (your tests will go here).
